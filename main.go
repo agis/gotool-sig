@@ -24,7 +24,12 @@ func main() {
 	ch := make(chan os.Signal, bufferSize)
 	signal.Notify(ch, syscall.SIGUSR1)
 
+	pid := os.Getpid()
+	ppid := os.Getppid()
+	pgid, _ := syscall.Getpgid(pid)
+	fmt.Printf("PID: %d, PPID: %d, PGID: %d", pid, ppid, pgid)
 	fmt.Printf("Signal monitor started with buffer size %d. Waiting for SIGUSR1...\n", bufferSize)
+	fmt.Println("Press Ctrl+C or send SIGTERM to exit gracefully")
 
 	for sig := range ch {
 		fmt.Printf("Received signal: %s (%d)\n", sig.String(), sig)
